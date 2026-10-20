@@ -72,6 +72,6 @@
 1. 页面底 `bg_page`
 2. 面板/卡片底 `bg_panel` + `border` 1px 描边
 3. 交互反馈：`fill_hover` 铺底（悬停）、按下时更深一档
-4. 压暗用现成的：对话框走 `@ui.dialog`（自带遮罩）；其他浮层需要压暗时用整层 `opacity` 或垫一层深色底，不仿毛玻璃
+4. 压暗用现成的：对话框走 `@ui.dialog`（自带遮罩）；其他浮层需要压暗时用整层 `opacity` 或垫一层深色底。要玻璃观感用 `@ui.glass`（只糊面板下方的内容），不要做窗口背后毛玻璃
 
 状态桶用现成的：`Style::hover(...)` / `Style::active(...)` / `Style::focus(...)`，或 `@style.style(hover=..., active=..., focus=...)`。过渡时长用 `transition_ms=`（毫秒）。

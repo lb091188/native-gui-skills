@@ -144,4 +144,22 @@ fn list_row(name : String, owner : String, state : String, zebra : Bool) -> @wid
 ## 两个全局开关
 
 - 圆角全站关：`@style.set_square_corners(true)`，再 `@widget.host_repaint_all()` 触发重绘。
-- 背景图柔焦：`art.soft_blur()`（固定一档、无参数），`@render.Image::from_bitmap` 后交给 `Painter::draw_image`；面积可控的封面/背景图用它，不做全屏实时处理。
+- 背景模糊：玻璃面板压在内容上方，绘制时把它下方的已画像素糊掉再回放。固定一档、半径固定 6，只给开关。
+
+```moonbit
+@ui.view(
+  [
+    background, // 任意内容节点（图片/图表/色块）
+    @ui.glass(
+      [@ui.text("背景模糊", role=@ui.Section), @ui.text("下方像素先糊再回放", role=@ui.Secondary)],
+      padding=12.0,
+      blur_on=fn() { on }, // 绘制期取值；切换后调用方触发重绘
+      class=[@style.style(position=@yoga.Absolute, left=24.0, top=24.0, width=300.0, height=120.0)],
+    ),
+  ],
+  width=420.0,
+  height=180.0,
+)
+```
+
+玻璃面板必须画在背景内容**之后**（同层兄弟里靠后，或用绝对定位），否则读不到背景像素。窗口背后（桌面壁纸）的毛玻璃不提供。

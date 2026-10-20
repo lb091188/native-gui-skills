@@ -142,6 +142,7 @@ supported_targets = "native"
 | `@ui.text(content, ...)` | `font_size=13.0`、`role=@ui.Plain`。给了 `role` 后：字号与字重由角色决定（显式 `font_size` / `weight` 被覆盖），颜色默认取角色 token（显式 `color` 优先） |
 | `@ui.button(text, ...)` | `variant=@ui.Soft`、`font_size=13.0`、`icon_size=14.0`（图标槽 = `icon_size + 6.0`）、`min_width=0.0` |
 | `@ui.divider(...)` | 分隔线，颜色默认取 `border`（`color=` 可覆盖） |
+| `@ui.glass(children, ...)` | 玻璃面板：`padding=12.0`、半径固定 6、`blur_on? : () -> Bool = fn() { true }`（绘制期取值）；绘制顺序必须在背景内容之后 |
 
 按钮五个变体按「这一层要多强」选，不要凭手感：`Solid`（页面唯一主操作）、`Soft`（默认，次级操作）、`Border`（成组的次要操作、工具栏）、`Text`（最低权重，行内操作）、`Danger`（破坏性）。
 

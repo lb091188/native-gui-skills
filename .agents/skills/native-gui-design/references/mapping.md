@@ -162,7 +162,7 @@ supported_targets = "native"
 @ui.panel("筛选", [@ui.text("内容")], padding=10.0, class=[@style.style(border_radius=6.0)])
 ```
 
-本栈的圆角曲线是二次曲线，同样半径下比 CSS 的圆弧更"方"一点：半径 4 在 1px 处的观感接近微倒角，半径 6 的裁切要到 2px 才明显离开角点。
+圆角几何是**真正的圆弧**，与 CSS / WinUI / GTK 同一定义，另带 1px 抗锯齿。角点像素常是低覆盖率（RGB 仍偏底色、alpha 很低），判断是否圆角要按 alpha 看覆盖率，不要按色相看；截图对比时也别把角点的淡色当成"没裁掉"。
 
 ## 入口
 

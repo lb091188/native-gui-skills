@@ -153,13 +153,16 @@ supported_targets = "native"
 |---|---|---|
 | `@ui.view` / `col` / `row` | 收 | 无（直角） |
 | `@ui.card` | 收 | 无（直角）→ 要 6 必须显式给 |
-| `@ui.panel` | **不收** | 无，且改不了 |
+| `@ui.panel` | 收（旧版本会报 `no parameter with label class~`，升级或改用 `view`） | 无（直角）→ 要 6 必须显式给 |
 | `@ui.dialog` | 收 | 按需显式给 8 |
 
 ```moonbit
-// 卡片圆角 6：实测可编译
+// 卡片 / 面板圆角 6：实测可编译
 @ui.card([@ui.text("内容")], title="概览", class=[@style.style(border_radius=6.0)])
+@ui.panel("筛选", [@ui.text("内容")], padding=10.0, class=[@style.style(border_radius=6.0)])
 ```
+
+本栈的圆角曲线是二次曲线，同样半径下比 CSS 的圆弧更"方"一点：半径 4 在 1px 处的观感接近微倒角，半径 6 的裁切要到 2px 才明显离开角点。
 
 ## 入口
 

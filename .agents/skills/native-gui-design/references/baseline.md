@@ -52,9 +52,8 @@
 | 层 | 值 | 怎么给 |
 |---|---|---|
 | 控件（按钮、输入框、下拉、标签） | 4 | 库内默认值就是 4，占绝大多数，通常不用写 |
-| 卡片 | 6 | **必须显式给**：`@ui.card(..., class=[@style.style(border_radius=6.0)])`。`card` 默认没有圆角 |
+| 卡片、面板 | 6 | **必须显式给**：`@ui.card(..., class=[@style.style(border_radius=6.0)])`，`@ui.panel(..., class=[...])` 同理。两者默认都没有圆角 |
 | 对话框、浮层窗口级容器 | 8 | `@ui.dialog` 收 `class`，同样显式给 |
-| `@ui.panel` | — | 不收 `class`，圆角设不了；需要圆角面板就用 `@ui.view` 自搭或改用 `card` |
 
 `border_radius` 大于 8 不出现。圆形元素（头像、状态点）用 `@ui.avatar` 之类自带形态的组件，不要靠 `border_radius=999` 造。
 

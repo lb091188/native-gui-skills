@@ -67,7 +67,7 @@ supported_targets = "native"
 
 `supported_targets` 不写会警告「依赖的包声明了但本包没声明」；不相关的包别引进 `moon.pkg`，未使用的包同样报警。
 
-`@text`（`NoahLiu/native-gui/text`）提供 `FontWeight` 与 `TextAlign` 的构造子，直接引包即可，它是 native-gui 自己模块内的包。
+`@text`（`NoahLiu/native-gui/text`）提供 `FontWeight` 与 `TextAlign` 的构造子，直接引包即可，它是 native-gui 自己模块内的包。写辅助函数时类型要标 `@widget.Node` 的话，同样要在 `moon.pkg` 引 `"NoahLiu/native-gui/widget" @widget`。
 
 ## `@style.style(...)` 参数表
 

@@ -21,6 +21,8 @@ description: Design rules for building user interfaces with NoahLiu/native-gui (
 4. **层次靠描边和底色分层，不靠投影**：`Style` 不提供 `box_shadow`，也没有高斯模糊。层级顺序是 `bg_page`（页面底）→ `bg_panel`（面板/卡片底）→ `border`（1px 描边）→ 强调色。整层明暗用 `opacity=`。
 5. **颜色一律写 token，不写死十六进制**：`background_color="bg_panel"`、`color="text_secondary"`。十六进制与 CSS 命名色只在自定义主题里出现，界面代码里出现就是暗色模式失效的隐患。20 个 token 见 `references/mapping.md`。
 
+常见界面模式照 `references/recipes.md` 的配方拼：工具栏、表单、卡片网格、列表、空状态、整页骨架。不要在已有界面上另发明一套排法。
+
 ## 交付前自查
 
 - 所有 `padding` / `row_gap` / `column_gap` 的值都在刻度内。

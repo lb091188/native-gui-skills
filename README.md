@@ -16,12 +16,6 @@ npx skills@latest add lb091188/native-gui-skills --skill native-gui-design --age
 
 不用 `npx` 时，clone 后把 `.agents/skills/native-gui-design/` 整个目录拷进目标工程的 `.agents/skills/`。
 
-国内网络不稳可走 gitee 镜像（手工拷贝那条路）：
-
-```sh
-git clone https://gitee.com/<镜像账号>/native-gui-skills.git
-```
-
 ## 内容
 
 - `SKILL.md`：何时用、动手前读什么、五条硬规则、交付前自查、已知陷阱。

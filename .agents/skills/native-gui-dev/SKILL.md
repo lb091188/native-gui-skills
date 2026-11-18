@@ -37,8 +37,33 @@ mng --version   # 应打印版本与 mng-schema 位
 | `pages/moon.pkg` | 生成码引用的别名集（@yoga/@ui/@base/@style/@widget/@text/@mngdev） |
 | `mng.toml` | `[dev]` + `[package]` 全键样板 |
 
-- `.mng` 页面结构：`<script>` 写 MoonBit 状态与逻辑（被模板引用的 `let` 绑定即响应槽），`<template>` 单根树（`ui-col` / `ui-button` / `ui-text`…），`<style>` 类选择器。指令五件：`{{ expr }}` 插值、`:attr="expr"` 动态属性、`@event="handler"` 事件、`v-model="store"` 双向绑定、`v-for` 行模板。文法细节看文档站 guide/sfc，不在这里发明写法。
 - `mng.toml` 常用键：`[dev]` 的 `templates`（扫哪些目录的 `*.mng`）、`build`、`run`（留空 = 从 Artifacts 抓可执行）、`app-id`（留空 = 由模块名派生，裸名自动垫 `local.` 命名空间）、`theme`（主题 JSON 路径，存盘即热重载）。
+
+## 代码组织纪律
+
+**界面一律 `.mng`，非界面才是 `.mbt`。** 这是默认分工，不是可选项：
+
+| 内容 | 落点 |
+|---|---|
+| 页面结构、布局、样式 | `.mng` 的 `<template>` + `<style>` |
+| 页面级状态与事件处理 | `.mng` 的 `<script>` 段（MoonBit 原文） |
+| 业务逻辑、数据模型、非 UI 工具 | 独立 `.mbt` 包（页面同包或另包） |
+| 应用入口 | `main.mbt`：单实例 + 检查服务接线 + 挂窗（`mng new` 已生成，别动） |
+
+- 为什么界面走 `.mng`：只有模板吃亚秒 HOT 热更、LSP 补全与诊断回投、检查器组件视图（一个模板标签一行）；纯构造器写的界面这些全没有。
+- **编译器强制**：模板属性里写样式字面量（`color="#f00"`）直接报错——样式必须进 `<style>` 或 `class`。这是架构约束，不是风格建议。
+- 例外：高度动态的编程式界面（画布类）或给库本身写组件，才用纯 MoonBit 构造器（`@ui.col([...])`）写 `.mbt`；普通应用页面一律 `.mng`。
+
+## 页面、组件与状态
+
+- **一个页面一个 `.mng`**：生成 `pub fn <stem>() -> Node`，像普通函数接进 `mount_window` 或路由；同包两个 `.mng` 撞 stem 报错。
+- **三段结构**：`<script>`（被模板引用的 `let` 绑定即响应槽）/ `<template>` 单根树 / `<style>` 类选择器。指令五件：`{{ expr }}` 插值、`:attr="expr"` 动态属性、`@event="handler"` 事件、`v-model="store"` 双向绑定、`v-for` 行模板。
+- **自定义组件**：script 段第一个只有签名、没有函数体的 `fn` 头就是 props 表（必填走位置参数，可选走 `名? : 类型 = 默认值`），同包直接当标签用；跨包 `let 组件名 = @包.函数`。
+- **状态三层归属**：页内状态 → script 段绑定；跨页共享 → 应用自持单例（模块里一个 App 结构，模板构建期只读）；控件值 → `Store` 进 `v-model`。
+- **值控件统一 Store**：input / checkbox / slider… 的当前值由 `Store[T]` 持有——外部 `set` 即刷新、交互改即回写；展示类取值两条入口 `x`（静态）/ `x_dyn`（Signal）。
+- **列表**：`v-for` 源必须是 `ListStore`（`@base.ListStore::new()`），不是 Store 或 Array；keyed 差分走 `for_list`（`key` 必传）。
+
+写页面前先查 `references/components.md`——全部内置组件一行速查（用途 / 状态参数 / 事件），别凭 web 直觉猜组件名与参数。
 
 ## 开发循环（mng dev）
 
@@ -57,7 +82,7 @@ watch 全工程 `.mng` + 工程源文件 + 主题文件；每次保存按契约�
 - 运行中新增 `.mng` 自动并入构建重启；删除自动清登记与生成码；改 `main.mbt` 走 COLD。
 - **生成码纪律**：dev 与生产两种形态共用同一个 `<stem>.gen.mbt` 文件、互相覆盖——提交前选一种并保持（CI 会做新鲜度比对，改了模板忘重生成直接红）。报「生成码不一致」就重跑 `mng dev`（dev 形态）或 `mng build`（生产形态）再提交。
 
-## 无头验证（不看窗口的开发闭环)
+## 无头验证（不看窗口的开发闭环）
 
 改界面 → `mng dev` 热更 → 用检查通道取数自查，全程不需要人看屏幕。检查服务按注入开关：`MNG_INSPECT=1` 由 `mng dev` / `mng mcp --run` 起应用时自动注入，应用侧 `inspect_auto_install()` 已在模板里接好；未注入零监听。
 
@@ -97,8 +122,10 @@ mng mcp                      # 直连已起的应用（如 mng dev 起的那个�
 | 连不上检查通道 | 应用没起，或没经 `mng dev` / `mng mcp --run` 起过（没注入 `MNG_INSPECT`） |
 | 检查 socket 不存在但应用活着 | socket 被占用时服务静默降级不监听——重启应用换新 socket |
 | 改了模板行为没变 | 生成码形态不一致：重跑 `mng dev` 或 `mng build` 重生成再看 |
+| `v-for 源须是 @base.ListStore` | 列表数据用 `let rows : @base.ListStore[T] = @base.ListStore::new()`，不是 Store 或 Array |
+| 模板属性 `color="#f00"` 编译报错 | 样式字面量必须进 `<style>` 或 `class`——编译器强制，动态 `:属性="表达式"` 不受限 |
 | 编辑器没有补全/诊断 | 装 VS Code 扩展 `tools/vscode-mng`；`mng-schema` 位不匹配时补全/诊断降级为空，高亮照用 |
 
 ## 版本基线
 
-按 `mng@0.2.12`（mng-schema 1）与 `NoahLiu/native-gui@0.3.3` 核对：生成物清单经真跑 `mng new` 验证，命令面逐条对照 `mng -h` / `-h` 细目，mcp 三工具经 stdio JSON-RPC 实连验证。工具升级后需同步复核本文件。
+按 `mng@0.2.12`（mng-schema 1）与 `NoahLiu/native-gui@0.3.3` 核对：生成物清单经真跑 `mng new` 验证，命令面逐条对照 `mng -h` / `-h` 细目，mcp 三工具经 stdio JSON-RPC 实连验证；`references/components.md` 按 `docs/zh/components/` 全家族压缩，组件签名与 `.mooncakes` 权威面核对。工具升级后需同步复核本文件。

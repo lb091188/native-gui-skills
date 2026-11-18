@@ -27,8 +27,9 @@ npx skills@latest add lb091188/native-gui-skills --skill native-gui-dev --agent 
   - `references/baseline.md`：间距刻度、字阶、圆角、配色比例、密度取法。
   - `references/mapping.md`：每个基准值落在 `@style` / `@ui` 的哪个参数上，附可直接照抄的片段。
   - `references/recipes.md`：常见界面模式配方（工具栏/表单/卡片网格/列表/空状态/整页骨架）。
-- `native-gui-dev/`：mng 工具链工作流。
-  - `SKILL.md`：装 mng、应用初始化（`mng new` 生成物与 `mng.toml`）、`mng dev` 热更循环（HOT/COLD 契约与生成码纪律）、无头验证闭环（`mng mcp` 三工具 / `mng inspect` / `@uitest` 直调断言）、打包发布、常见卡点。
+- `native-gui-dev/`：mng 工具链工作流与代码组织。
+  - `SKILL.md`：装 mng、应用初始化（`mng new` 生成物与 `mng.toml`）、代码组织纪律（界面一律 `.mng`、逻辑才是 `.mbt`）、页面组件与状态归属（自定义组件 props、状态三层、编译器红线）、`mng dev` 热更循环（HOT/COLD 契约与生成码纪律）、无头验证闭环（`mng mcp` 三工具 / `mng inspect` / `@uitest` 直调断言）、打包发布、常见卡点。
+  - `references/components.md`：内置组件一行速查——10 个家族的用途、状态参数与事件。
 
 ## 版本
 

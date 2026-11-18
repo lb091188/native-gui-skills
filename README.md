@@ -18,6 +18,12 @@ npx skills@latest add lb091188/native-gui-skills --skill native-gui-dev --agent 
 
 不用 `npx` 时，clone 后把 `.agents/skills/<技能名>/` 整个目录拷进目标工程的 `.agents/skills/`。
 
+## 装完之后
+
+- **验证**：`npx skills list`，或直接看 `.agents/skills/` 下有 `native-gui-design` 与 `native-gui-dev` 两个目录（各含 `SKILL.md`）。
+- **AI 怎么发现**：重启 AI 会话，agent 扫 `.agents/skills/*/SKILL.md` 的 description 进技能列表。之后两条路触发——自动（说「用 native-gui 建个应用」「把这个界面改成工业风」，AI 按 description 匹配）或显式（`/native-gui-dev`、「按 native-gui-design 技能来」）。
+- **更新**：重跑同一条 `add` 命令覆盖，或 `npx skills update`。
+
 ## 内容
 
 两个技能分工：**观感怎么写**看 design，**工具链怎么走**看 dev。
